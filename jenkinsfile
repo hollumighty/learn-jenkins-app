@@ -5,7 +5,6 @@ pipeline {
             reuseNode true                 //for workspace synchronization
         }
     }
-    
 
     //env variable for netlify cli
     environment {
@@ -15,30 +14,16 @@ pipeline {
 
     stages {
         stage('Build') {                     //Build stage 
-            /*agent {
-                docker {                    //using docker container
-                    image 'node:18-alpine'
-                    reuseNode true          //for workspace synchronization
-                }
-            }*/
             steps {
+                //npm ci used instead of npm build esp in automated environment where multiple build is neccessary
                 sh '''
-                
-                  npm ci             //used instead of npm build esp in automated environment where multiple build is neccessary
+                  npm ci             
                   npm run build
-                  
                 '''
             }    
         }
 
         stage('Test') {                       //Test stage
-            /*agent {
-                docker {
-                    image 'node:18-alpine'
-                    reuseNode true          
-                }
-            }*/
-
             steps {
                 //check the build artifact and run npm test on app.test.js
                 sh '''
@@ -48,13 +33,6 @@ pipeline {
             }
         }
         stage('Deploy') {       //Deploy to production
-            /*agent {
-                docker {
-                    image 'node:18-alpine'
-                    reuseNode true          
-                }
-            }*/
-
             steps {
                 // Deploy on netlify
                 sh '''
