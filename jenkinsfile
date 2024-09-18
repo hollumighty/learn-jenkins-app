@@ -2,10 +2,27 @@ pipeline {
     agent any
 
     stages {
-        stage('Hello') {
+        //Build stage 
+        stage('Build') {       //docker agent
+            agent {
+                docker {
+                    image 'node:18-alpine'
+                    reuseNode true         //Workspace synchronization
+                }
+            }
+ 
             steps {
-                echo 'Hello World'
+                sh '''
+                    npm --version //To track the version used for the build (good for troubleshooting)
+                    node --version
+
+                    npm ci //use instead of npm install to ensure clean install of dependencies esp in automated environmenmt
+                    npm run build
+
+                    sh 'npm --version'
+                '''
             }
         }
     }
 }
+
