@@ -23,16 +23,19 @@ pipeline {
             }    
         }
 
-        stage('Test') {                       //Test stage
-            steps {
+        stage('Unit Test') {                 //Test stage
+            parellel {
+                steps {
                 //check the build artifact and run npm test on app.test.js
                 sh '''
                     test -f build/index.html      
                     npm test                     
                '''
-            }
+                }
+            }      
         }
-        stage('Deploy') {       //Deploy to production
+
+        stage('Deploy') {                     //Deploy to production
             steps {
                 // Deploy on netlify
                 sh '''
