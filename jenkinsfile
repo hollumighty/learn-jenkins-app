@@ -3,7 +3,7 @@ pipeline {
 
     //env variable for netlify cli
     environment {
-        NETLIFY_SITE_ID = '9bdedd39-09a0-43f7-b95b-51a56748d8df'
+        NETLIFY_SITE_ID = '53b9e83b-7cd6-4478-8a14-d847e2579eb7'
         NETLIFY_AUTH_TOKEN = credentials('netlify-token')
     }
 
@@ -43,7 +43,7 @@ pipeline {
                '''
             }
         }
-        stage('Deploy') {       //Deploy
+        stage('Deploy') {       //Deploy to production
             agent {
                 docker {
                     image 'node:18-alpine'
@@ -55,8 +55,9 @@ pipeline {
                 // Deploy on netlify
                 sh '''
                     npm install netlify-cli  
-                    node_modules/.bin/netlify status   
-                                  
+                    node_modules/.bin/netlify status 
+                    node_modules/.bin/netlify deploy --dir=build --prod
+                                                      
                '''
             }
         }
