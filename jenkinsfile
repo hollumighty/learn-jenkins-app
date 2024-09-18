@@ -1,7 +1,11 @@
 pipeline {
     agent any
 
-    //environment 
+    //env variable for netlify cli
+    environment {
+        NETLIFY_SITE_ID = '9bdedd39-09a0-43f7-b95b-51a56748d8df'
+        NETLIFY_AUTH_TOKEN = credentials('netlify-token')
+    }
 
     stages {
         stage('Build') {       //Build stage on docker container
@@ -50,7 +54,8 @@ pipeline {
             steps {
                 // Deploy on netlify
                 sh '''
-                    npm install netlify-cli     
+                    npm install netlify-cli  
+                    node_modules/.bin/netlify status   
                                   
                '''
             }
