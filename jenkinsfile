@@ -1,5 +1,11 @@
 pipeline {
-    agent any
+    agent {
+        docker {                           //using docker agent
+            image 'node:18-alpine'
+            reuseNode true                 //for workspace synchronization
+        }
+    }
+    
 
     //env variable for netlify cli
     environment {
@@ -8,18 +14,16 @@ pipeline {
     }
 
     stages {
-        stage('Build') {       //Build stage on docker container
-            agent {
-                docker {
+        stage('Build') {                     //Build stage 
+            /*agent {
+                docker {                    //using docker container
                     image 'node:18-alpine'
                     reuseNode true          //for workspace synchronization
                 }
-            }
+            }*/
             steps {
                 sh '''
-                  npm --version       //To track the version, useful for troubleshooting
-                  node --version
-
+                
                   npm ci             //used instead of npm build esp in automated environment where multiple build is neccessary
                   npm run build
                   
@@ -27,13 +31,13 @@ pipeline {
             }    
         }
 
-        stage('Test') {       //Test stage
-            agent {
+        stage('Test') {                       //Test stage
+            /*agent {
                 docker {
                     image 'node:18-alpine'
                     reuseNode true          
                 }
-            }
+            }*/
 
             steps {
                 //check the build artifact and run npm test on app.test.js
@@ -44,20 +48,19 @@ pipeline {
             }
         }
         stage('Deploy') {       //Deploy to production
-            agent {
+            /*agent {
                 docker {
                     image 'node:18-alpine'
                     reuseNode true          
                 }
-            }
+            }*/
 
             steps {
                 // Deploy on netlify
                 sh '''
                     npm install netlify-cli  
                     node_modules/.bin/netlify status 
-                    node_modules/.bin/netlify deploy --dir=build --prod
-                                                      
+                    node_modules/.bin/netlify deploy --dir=build --prod                                 
                '''
             }
         }
