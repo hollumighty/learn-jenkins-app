@@ -1,6 +1,8 @@
 pipeline {
     agent any
 
+    //environment 
+
     stages {
         stage('Build') {       //Build stage on docker container
             agent {
