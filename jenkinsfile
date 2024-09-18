@@ -30,11 +30,18 @@ pipeline {
             }
 
             steps {
+                //check the build artifact and run npm test on app.test.js
                 sh '''
-                    test -f build/index.html     //check the build artifact
-                    npm test                     //run test on app.test.js
+                    test -f build/index.html      
+                    npm test                     
                 '''
             }
+        }
+    }
+
+    post {
+        always {
+            junit 'test-results/junit.xml'
         }
     }
 }
