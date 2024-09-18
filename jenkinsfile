@@ -34,9 +34,27 @@ pipeline {
                 sh '''
                     test -f build/index.html      
                     npm test                     
-                '''
+               '''
             }
         }
+        stage('Deploy') {       //Deploy
+            agent {
+                docker {
+                    image 'node:18-alpine'
+                    reuseNode true          
+                }
+            }
+
+            steps {
+                // Deploy on netlify
+                sh '''
+                    npm install netlify-cli     
+                                  
+               '''
+            }
+        }
+    }
+
     }
 
     post {
