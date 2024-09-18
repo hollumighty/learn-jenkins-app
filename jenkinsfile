@@ -2,28 +2,38 @@ pipeline {
     agent any
 
     stages {
-        stage('Build') {     
+        stage('Build') {       //Build stage on docker container
             agent {
                 docker {
                     image 'node:18-alpine'
-                    reuseNode true         
+                    reuseNode true          //for workspace synchronization
                 }
             }
- 
             steps {
                 sh '''
-                  npm --version
+                  npm --version       //To track the version, useful for troubleshooting
                   node --version
 
-                  npm ci
+                  npm ci             //used instead of npm build esp in automated environment where multiple build is neccessary
                   npm run build
                   
                 '''
-
-                
-            }
-
+            }    
         }
+
+        stage('Test') {       //Test stage
+            agent {
+                docker {
+                    image 'node:18-alpine'
+                    reuseNode true          
+                }
+            }
+            steps {
+                sh '''
+                  test -f build/index.html      //check for the build artifact
+                  npm test           
+                '''
+            }
     }
 }
 
