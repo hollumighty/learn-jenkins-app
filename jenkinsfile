@@ -15,7 +15,7 @@ pipeline {
     stages {
         stage('Build') {                     //Build stage 
             steps {
-                //npm ci used instead of npm build esp in automated environment where multiple build is neccessary
+                //npm ci used instead of npm install esp in automated environment where multiple build is neccessary
                 sh '''
                   npm ci             
                   npm run build
